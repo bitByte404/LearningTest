@@ -13,13 +13,16 @@ class SecondActivity : AppCompatActivity() {
         binding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val value = intent.getIntExtra("testKey", 0)
-        binding.result.text = value.toString()
+        viewModel = SharedModelProvider.get(this)
+        viewModel.number.observe(this) {
+            binding.result.text = it.toString()
+        }
+
+        binding.result.text = viewModel.getNumber().toString()
 
         binding.addButton.setOnClickListener {
             viewModel.addOne()
-            binding.result.text = viewModel.number.toString()
+            binding.result.text = it.toString()
 
         }
     }

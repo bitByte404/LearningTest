@@ -3,6 +3,8 @@ package com.wuliner.learningtest
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.wuliner.learningtest.databinding.ActivityMainBinding
 
@@ -15,10 +17,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel = SharedModelProvider.get(this)
 
-        //viewModel = MainViewModel() 不能这样创建 没有建立生命周期关系
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        binding.result.text = viewModel.number.toString()
+        //观察数据变化
+        viewModel.number.observe(this) {
+            binding.result.text = it.toString()
+        }
 
 
         /**
@@ -35,13 +39,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.addButton.setOnClickListener {
             viewModel.addOne()
-            binding.result.text = viewModel.number.toString()
+            binding.result.text = viewModel.getNumber().toString()
         }
 
         binding.nextButton.setOnClickListener {
-            val intent = Intent(this, SecondActivity::class.java)
-            intent.putExtra("testKey", viewModel.number)
-            startActivity(intent)
+            startActivity(Intent(this, SecondActivity::class.java))
         }
 
     }

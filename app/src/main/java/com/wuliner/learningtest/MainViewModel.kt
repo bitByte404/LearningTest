@@ -1,12 +1,19 @@
 package com.wuliner.learningtest
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
     //不希望界面旋转或者跳转而丢失的数据
-     var number: Int = 0
+     var number: MutableLiveData<Int> = MutableLiveData(0)
 
     fun addOne() {
-        number++
+        //取出对应的数据进行计算操作
+        val result = number.value!! + 1
+        //将新的数据写入到LiveData对象中
+        number.postValue(result)
     }
+
+    fun getNumber() = number.value!!
 }
